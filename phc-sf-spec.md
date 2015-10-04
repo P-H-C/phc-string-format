@@ -1,5 +1,6 @@
-Specification
-=============
+# PHC string format
+
+## Specification
 
 This document specifies string encodings for the output of a password
 hashing function. Three kinds of strings are defined:
@@ -98,8 +99,7 @@ specification MUST define the minimum, maximum and default output
 length.
 
 
-B64
----
+### B64
 
 The B64 encoding is the standard Base64 encoding (RFC 4648, section 4)
 except that the padding `=` signs are omitted, and extra characters
@@ -137,8 +137,7 @@ producers MUST set the trailing bits to 0, while consumers MAY ignore
 them, or MAY reject such invalid encodings.
 
 
-Decimal Encoding
-----------------
+### Decimal Encoding
 
 For an integer value x, its decimal encoding consist in the following:
 
@@ -162,8 +161,7 @@ The C function `strtol()` and `strtoul()` can decode decimal values if
 their `base` parameter is set to 10.
 
 
-Function Duties
----------------
+### Function Duties
 
 A password hashing function that uses this specification for its salt
 and hash strings MUST specify the following:
@@ -220,8 +218,7 @@ It is RECOMMENDED to follow these guidelines:
      bits to be used for password verification.
 
 
-API
-===
+## API
 
 The traditional Unix crypt() function is used both for password
 registration, and for password verification. It uses two string
@@ -268,8 +265,7 @@ avoid local variations that are detrimental to interoperability, while
 not breaking existing password hashes.
 
 
-Argon2 encoding
-==========
+## Argon2 encoding
 
 For Argon2, the following is specified:
 
