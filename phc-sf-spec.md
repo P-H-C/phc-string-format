@@ -6,7 +6,7 @@ This document specifies string encodings for the output of a password
 hashing function. Three kinds of strings are defined:
 
   - Parameter string: identifies the function and contains values for
-     its parameters.
+    its parameters.
   - Salt string: a parameter string that also specifies the salt value.
   - Hash string: a salt string that also specifies the hash output.
 
@@ -21,26 +21,25 @@ string that differs from the format herein described.
 
 We define the following format:
 
-`
-  $<id>[$<param>=<value>(,<param>=<value>)*][$<salt>[$<hash>]]
-`
+       $<id>[$<param>=<value>(,<param>=<value>)*][$<salt>[$<hash>]]
+
 where:
 
-  `<id>` is the symbolic name for the function
-  `<param>` is a parameter name
-  `<value>` is a parameter value
-  `<salt>` is an encoding of the salt
-  `<hash>` is an encoding of the hash output
+ - `<id>` is the symbolic name for the function
+ - `<param>` is a parameter name
+ - `<value>` is a parameter value
+ - `<salt>` is an encoding of the salt
+ - `<hash>` is an encoding of the hash output
 
 The string is then the concatenation, in that order, of:
 
-  - a `$` sign;
-  - the function symbolic name;
-  - optionally, a `$` sign followed by one or several parameters, each
-    with a `name=value` format; the parameters are separated by commas;
-  - optionally, a `$` sign followed by the (encoded) salt value;
-  - optionally, a `$` sign followed by the (encoded) hash output (the
-     hash output may be present only if the salt is present).
+ - a `$` sign;
+ - the function symbolic name;
+ - optionally, a `$` sign followed by one or several parameters, each
+   with a `name=value` format; the parameters are separated by commas;
+ - optionally, a `$` sign followed by the (encoded) salt value;
+ - optionally, a `$` sign followed by the (encoded) hash output (the
+   hash output may be present only if the salt is present).
 
 The function symbolic name is a sequence of characters in: `[a-z0-9-]`
 (lowercase letters, digits, and the minus sign). No other character is
@@ -106,11 +105,16 @@ except that the padding `=` signs are omitted, and extra characters
 (whitespace) are not allowed:
 
   - Input is split into successive groups of bytes. Each group, except
-  possibly the last one, contains exactly three bytes.
+    possibly the last one, contains exactly three bytes.
 
   - For a group of bytes b0, b1 and b2, compute the following value:
-        `x = (b0 << 16) + (b1 << 8) + b2`.
-    Then split x into four 6-bit values y0, y1, y2 and y3 such that: `x = (y0 << 18) + (y1 << 12) + (y2 << 6) + y3`
+
+           x = (b0 << 16) + (b1 << 8) + b2
+
+    Then split `x` into four 6-bit values `y0`, `y1`, `y2` and `y3`
+    such that:
+
+           x = (y0 << 18) + (y1 << 12) + (y2 << 6) + y3
 
   - Each 6-bit value is encoded into a character in the `[A-Za-z0-9+/]`
   alphabet, in that order:
@@ -139,23 +143,23 @@ them, or MAY reject such invalid encodings.
 
 ### Decimal Encoding
 
-For an integer value x, its decimal encoding consist in the following:
+For an integer value _x_, its decimal encoding consist in the following:
 
-  - If x < 0, then its decimal encoding is the minus sign `-` followed
-    by the decimal encoding of -x.
-  - If x = 0, then its decimal encoding is the single character `0`.
-  - If x > 0, then its decimal encoding is the smallest sequence of
-  ASCII digits that matches its value (i.e. there is no leading zero).
+  - If _x_ < 0, then its decimal encoding is the minus sign `-` followed
+    by the decimal encoding of -_x_.
+  - If _x_ = 0, then its decimal encoding is the single character `0`.
+  - If _x_ > 0, then its decimal encoding is the smallest sequence of
+    ASCII digits that matches its value (i.e. there is no leading zero).
 
-Thus, a value is a valid decimal for an integer x if and only if all of
+Thus, a value is a valid decimal for an integer _x_ if and only if all of
 the following hold true:
 
-  - The first character is either a `-` sign, or an ASCII digits.
+  - The first character is either a `-` sign, or an ASCII digit.
   - All characters other than the first are ASCII digits.
   - If the first character is `-` sign, then there is at least another
-  character, and the second character is not a `0`.
-  - If the string consists in more than one characters, then the first
-  one cannot be a `0`.
+    character, and the second character is not a `0`.
+  - If the string consists in more than one character, then the first
+    one cannot be a `0`.
 
 The C function `strtol()` and `strtoul()` can decode decimal values if
 their `base` parameter is set to 10.
@@ -179,43 +183,43 @@ and hash strings MUST specify the following:
       value when not encoded.
 
   - The set of valid salt values, in particular minimum and maximum
-     length (in characters, and in bytes when applicable).
+    length (in characters, and in bytes when applicable).
 
   - The minimum, maximum and default output lengths (in bytes, and in
-     characters after encoding).
+    characters after encoding).
 
 
 It is RECOMMENDED to follow these guidelines:
 
   - The function name, and the parameter names, should promote
-     readability. (Note that readability depends a lot on who is doing
-     the reading, and there is no universal definition of that property.)
+    readability. (Note that readability depends a lot on who is doing
+    the reading, and there is no universal definition of that property.)
 
-  - Making parameters optional means that human readers must know
-     what value a parameter has when it has been omitted. Parameters
-     for optional features (e.g. some explicit "additional data") are
-     most naturally made optional; other parameters such as number of
-     iterations are best kept specified explicitly.
+  - Making parameters optional means that human readers must know what
+    value a parameter has when it has been omitted. Parameters for
+    optional features (e.g. some explicit "additional data") are most
+    naturally made optional; other parameters such as number of
+    iterations are best kept specified explicitly.
 
   - Maximum lengths for salt, output and parameter values are meant to
-     help consumer implementations, in particular written in C and using
-     stack-allocated buffers. These buffers must account for the worst
-     case, i.e. the maximum defined length. Therefore, keep these
-     lengths low.
+    help consumer implementations, in particular written in C and using
+    stack-allocated buffers. These buffers must account for the worst
+    case, i.e. the maximum defined length. Therefore, keep these lengths
+    low.
 
   - The role of salts is to achieve uniqueness. A _random_ salt is fine
-     for that as long as its length is sufficient; a 16-byte salt would
-     work well (by definition, UUID are very good salts, and they encode
-     over exactly 16 bytes). 16 bytes encode as 22 characters in B64.
-     Functions should disallow salt values that are too small for
-     security (4 bytes should be viewed as an absolute minimum).
+    for that as long as its length is sufficient; a 16-byte salt would
+    work well (by definition, UUID are very good salts, and they encode
+    over exactly 16 bytes). 16 bytes encode as 22 characters in B64.
+    Functions should disallow salt values that are too small for
+    security (4 bytes should be viewed as an absolute minimum).
 
-  - The hash output, for a verification, must be long enough to
-     make preimage attacks at least as hard as password guessing.
-     To promote wide acceptance, a default output size of 256 bits
-     (32 bytes, encoded as 43 characters) is recommended. Function
-     implementations SHOULD NOT allow outputs of less than 80
-     bits to be used for password verification.
+  - The hash output, for a verification, must be long enough to make
+    preimage attacks at least as hard as password guessing. To promote
+    wide acceptance, a default output size of 256 bits (32 bytes,
+    encoded as 43 characters) is recommended. Function implementations
+    SHOULD NOT allow outputs of less than 80 bits to be used for
+    password verification.
 
 
 ## API
@@ -224,37 +228,37 @@ The traditional Unix crypt() function is used both for password
 registration, and for password verification. It uses two string
 parameters:
 
-   `char *crypt(const char *key, const char *salt);`
+       char *crypt(const char *key, const char *salt);
 
 The `key` is the password, while `salt` is a salt string or a hash
 string. In order to be compatible with how the crypt() function is
 used in existing software, the following must hold:
 
   - If `salt` is a salt string (no output), then the function must
-     compute a hash output whose length is the default output length for
-     that function. The returned string MUST be the strict,
-     deterministic encoding of the used parameters, salt and output.
+    compute a hash output whose length is the default output length for
+    that function. The returned string MUST be the strict, deterministic
+    encoding of the used parameters, salt and output.
 
   - If `salt` is a parameter string (no salt nor output), then the
-     function must generate a new appropriate salt value as mandated by
-     the function specification (e.g. using the defined default salt
-     length), and then proceed as in the previous case. The returned
-     string MUST be the strict, deterministic encoding of the used
-     parameters, salt and output.
+    function must generate a new appropriate salt value as mandated by
+    the function specification (e.g. using the defined default salt
+    length), and then proceed as in the previous case. The returned
+    string MUST be the strict, deterministic encoding of the used
+    parameters, salt and output.
 
-  - If `salt` is a hash string, then the function must compute an
-     output with exactly the same length as the one provided in
-     the input. The output is then the concatenation of the
-     parameters and salt _as they were received_, and the newly computed
-     output. Basically, the function truncates the `salt` string at
-     its last `$` sign, then appends the recomputed output.
+  - If `salt` is a hash string, then the function must compute an output
+    with exactly the same length as the one provided in the input. The
+    output is then the concatenation of the parameters and salt _as they
+    were received_, and the newly computed output. Basically, the
+    function truncates the `salt` string at its last `$` sign, then
+    appends the recomputed output.
 
 The third case departs from the prescription that string producers must
 always follow the deterministic encoding. This is done that way in order
 to support the common case of password verification: the `salt` value is
 the complete hash string as it is stored; the hash is recomputed, and
-the caller verifies that the exact same string is obtained (with a
-strcmp() call). This is the reason why the parameters and salt are
+the caller verifies that the exact same string is obtained (e.g. with a
+`strcmp()` call). This is the reason why the parameters and salt are
 reused "as is" in the output, even if they do not match the
 deterministic encoding prescribed in this document.
 
@@ -265,7 +269,7 @@ avoid local variations that are detrimental to interoperability, while
 not breaking existing password hashes.
 
 
-## Argon2 encoding
+## Argon2 Encoding
 
 For Argon2, the following is specified:
 
@@ -277,49 +281,45 @@ For Argon2, the following is specified:
 
   - The parameters are:
 
-    * `m`       Memory size, expressed in kilobytes, between 1 and (2^32)-1.
-                Value is an integer in decimal, over 1 to 10 digits.
+    * `m`: Memory size, expressed in kilobytes, between 1 and (2^32)-1.
+      Value is an integer in decimal, over 1 to 10 digits.
 
-    * `t`       Number of iterations, between 1 and (2^32)-1.
-                Value is an integer in decimal, over 1 to 10 digits.
+    * `t`: Number of iterations, between 1 and (2^32)-1.
+      Value is an integer in decimal, over 1 to 10 digits.
 
-    * `p`       Degree of parallelism, between 1 and 255.
-                Value is an integer in decimal, over 1 to 3 digits.
+    * `p`: Degree of parallelism, between 1 and 255.
+      Value is an integer in decimal, over 1 to 3 digits.
 
-    * `keyid`   Binary identifier for a key. Value is a sequence of 0
-                to 8 bytes, encoded in B64 as 0 to 11 characters. This
-                parameter is optional; the default value is the empty
-                sequence (no byte at all) and its meaning is that no key
-                is to be used. The contents of the identifier are chosen
-                by the application and are meant to allow the
-                application to locate the key to use.
+    * `keyid`: Binary identifier for a key. Value is a sequence of 0
+      to 8 bytes, encoded in B64 as 0 to 11 characters. This parameter
+      is optional; the default value is the empty sequence (no byte at
+      all) and its meaning is that no key is to be used. The contents of
+      the identifier are chosen by the application and are meant to
+      allow the application to locate the key to use.
 
-     * data    Associated data. Value is a sequence of 0 to 32 bytes,
-                encoded in B64 as 0 to 43 characters. This parameter is
-                optional; the default value is the empty sequence (no
-                byte at all). The associated data is extra, non-secret
-                value that is included in the Argon2 input.
+    * `data`: Associated data. Value is a sequence of 0 to 32 bytes,
+      encoded in B64 as 0 to 43 characters. This parameter is optional;
+      the default value is the empty sequence (no byte at all). The
+      associated data is extra, non-secret value that is included in the
+      Argon2 input.
 
-     The parameters shall appear in the `m,t,p,keyid,data` order.
-     The `keyid` and `data` parameters are optional; the three others
-     are NOT optional.
+    The parameters shall appear in the `m,t,p,keyid,data` order.
+    The `keyid` and `data` parameters are optional; the three others
+    are NOT optional.
 
   - The salt value is encoded in B64. The length in bytes of the
-     salt is between 8 and 48 bytes(*), thus yielding a length in
-     characters between 11 and 64 characters (and that length is never
-     equal to 1 modulo 4). The default byte length of the salt is 16
-     bytes (22 characters in B64 encoding). An encoded UUID, or a
-     sequence of 16 bytes produced with a cryptographically strong
-     PRNG, are appropriate salt values.
+    salt is between 8 and 48 bytes(*), thus yielding a length in
+    characters between 11 and 64 characters (and that length is never
+    equal to 1 modulo 4). The default byte length of the salt is 16
+    bytes (22 characters in B64 encoding). An encoded UUID, or a
+    sequence of 16 bytes produced with a cryptographically strong
+    PRNG, are appropriate salt values.
 
-     ((*) the Argon2 specification states that the salt can be much
-     longer, up to 2^32-1 bytes, but this makes little sense for
-     password hashing. Specifying a relatively small maximum length
-     allows for parsing with a stack allocated buffer.)
+    ((*) the Argon2 specification states that the salt can be much
+    longer, up to 2^32-1 bytes, but this makes little sense for
+    password hashing. Specifying a relatively small maximum length
+    allows for parsing with a stack allocated buffer.)
 
   - The hash output is encoded in B64. Its length shall be between
     12 and 64 bytes (16 and 86 characters, respectively). The default
     output length is 32 bytes (43 characters).
-
-
-
