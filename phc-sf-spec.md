@@ -36,7 +36,7 @@ The string is then the concatenation, in that order, of:
 
  - a `$` sign;
  - the function symbolic name;
- - optionally, a `$` sign followed by the algortihm version with a `v=version` format;
+ - optionally, a `$` sign followed by the algorithm version with a `v=version` format;
  - optionally, a `$` sign followed by one or several parameters, each
    with a `name=value` format; the parameters are separated by commas;
  - optionally, a `$` sign followed by the (encoded) salt value;
