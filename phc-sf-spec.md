@@ -21,11 +21,12 @@ string that differs from the format herein described.
 
 We define the following format:
 
-       $<id>[$<param>=<value>(,<param>=<value>)*][$<salt>[$<hash>]]
+       $<id>[$v=<version>][$<param>=<value>(,<param>=<value>)*][$<salt>[$<hash>]]
 
 where:
 
  - `<id>` is the symbolic name for the function
+ - `<version>` is the algorithm version
  - `<param>` is a parameter name
  - `<value>` is a parameter value
  - `<salt>` is an encoding of the salt
@@ -35,6 +36,7 @@ The string is then the concatenation, in that order, of:
 
  - a `$` sign;
  - the function symbolic name;
+ - optionally, a `$` sign followed by the algorithm version with a `v=version` format;
  - optionally, a `$` sign followed by one or several parameters, each
    with a `name=value` format; the parameters are separated by commas;
  - optionally, a `$` sign followed by the (encoded) salt value;
@@ -47,6 +49,8 @@ allowed. Each function defines its own identifier (or identifiers in
 case of a function family); identifiers should be explicit (human
 readable, not a single digit), with a length of about 5 to 10
 characters. An identifier name MUST NOT exceed 32 characters in length.
+
+The value for the version shall be a sequence of characters in: `[0-9]`.
 
 Each parameter name shall be a sequence of characters in: `[a-z0-9-]`
 (lowercase letters, digits, and the minus sign). No other character is
@@ -67,6 +71,9 @@ The function specification MUST define a clear, unambiguous,
 deterministic encoding for each possible value of a parameter. Producers
 of strings MUST follow that encoding. Consumers MAY accept alternate
 encodings.
+
+A version may be optional; if the version is optional, then the
+function MUST define the default version to use.
 
 A parameter may be optional; if a parameter is optional, then the
 function MUST define the default value of the parameter. That default
@@ -279,6 +286,8 @@ For Argon2, the following is specified:
 
   - The identifier for Argon2ds is `argon2ds`.
 
+  - The versions are: [16, 19].
+  
   - The parameters are:
 
     * `m`: Memory size, expressed in kilobytes, between 1 and (2^32)-1.
