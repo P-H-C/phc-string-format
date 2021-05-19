@@ -1,5 +1,22 @@
 # PHC string format
 
+## Example
+
+Given the following inputs:
+
+* Password: `hunter2`
+* Salt: ```\x81\x98\x95\xFC\xCD`=\xCD\xB6\x12P\a\xFC\x98u\x1F```
+* Secret: `pepper`
+* Variant: `argon2id`
+* Version: `19`
+* Time cost: `2`
+* Memory cost: `65536`
+* Parallelism cost: `1`
+
+Argon2 will generate the following digest:
+
+`$argon2id$v=19$m=65536,t=2,p=1$gZiV/M1gPc22ElAH/Jh1Hw$CWOrkoo7oJBQ/iyh7uJ0LO2aLEfrHwTWllSAxT0zRno`
+
 ## Specification
 
 This document specifies string encodings for the output of a password
