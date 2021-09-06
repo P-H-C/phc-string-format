@@ -301,7 +301,7 @@ For Argon2, the following is specified:
 
   - The identifier for Argon2i is `argon2i`.
 
-  - The identifier for Argon2ds is `argon2ds`.
+  - The identifier for Argon2id is `argon2id`.
 
   - The versions are: [16, 19].
   
