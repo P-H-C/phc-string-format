@@ -72,7 +72,9 @@ The value for the version shall be a sequence of characters in: `[0-9]`.
 Each parameter name shall be a sequence of characters in: `[a-z0-9-]`
 (lowercase letters, digits, and the minus sign). No other character is
 allowed. Parameter names SHOULD be readable for a human user. A
-parameter name MUST NOT exceed 32 characters in length.
+parameter name MUST NOT exceed 32 characters in length. A parameter
+name MUST NOT be equal to the string `v` (to avoid confusion with the
+version field).
 
 The value for each parameter consists in characters in:
 `[a-zA-Z0-9/+.-]` (lowercase letters, uppercase letters, digits, `/`,
